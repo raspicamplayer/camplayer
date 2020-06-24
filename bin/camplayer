@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# cd to set the correct working directory in python
+cd /usr/local/share/camplayer/camplayer
+./camplayer.py "$@"
