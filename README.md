@@ -99,7 +99,7 @@ I take no responsibility for leaked footage, leaked credentials, hacked cameras 
 
 ## Installation
 
-The instruction below assume you are running a recent Raspbian Buster Lite build.  
+The instruction below assume you are running a recent Raspberry Pi OS Lite build.  
 
 Add the following lines to '/boot/config.txt':  
 ```
