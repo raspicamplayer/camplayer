@@ -24,6 +24,9 @@ pi_revisions = {
     "a03111" : {"model": "4B 1GB",   "supported": True, "dual_hdmi": True,  "hevc": True},
     "b03111" : {"model": "4B 2GB",   "supported": True, "dual_hdmi": True,  "hevc": True},
     "c03111" : {"model": "4B 4GB",   "supported": True, "dual_hdmi": True,  "hevc": True},
+    "b03112" : {"model": "4B 2GB",   "supported": True, "dual_hdmi": True,  "hevc": True},
+    "c03112" : {"model": "4B 4GB",   "supported": True, "dual_hdmi": True,  "hevc": True},
+    "d03114" : {"model": "4B 8GB",   "supported": True, "dual_hdmi": True,  "hevc": True},
 }
 
 
