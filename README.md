@@ -143,6 +143,13 @@ To automatically start camplayer at boot:
 sudo systemctl enable camplayer.service
 ```
 
+To stop camplayer:  
+```
+sudo systemctl stop camplayer.service
+```
+or  
+Press "q" key.
+  
 ### Video backgrounds
 
 Optionally, camplayer can display 'NO LINK' video backgrounds by using pipng.
@@ -199,7 +206,14 @@ window3 = device2,channel1
 window4 = device2,channel1
 ```
 It is important that screen sections are named "**[SCREENx]**" and windows are named "**windowx**".  
-The window values should be formatted as "**devicex,channelx**" and match the desired device section and channel you created in previous step.
+The window values should be formatted as "**devicex,channelx**" and match the desired device section and channel you created in previous step.  
+  
+Another important point is that "**layout**" must be one of the following numbers "**1,4,6,7,8,9,10,13,16***"  
+This number defines the layout and the number of windows per screen e.g. a layout of "6" gives you the following layout:  
+https://github.com/raspicamplayer/camplayer/blob/master/resources/backgrounds/nolink_1P5.png  
+  
+You can find an overview of possible layouts here:  
+https://github.com/raspicamplayer/camplayer/tree/master/resources/backgrounds
 
 ### Raspberry Pi dual display
 First of all, camplayer assumes that both displays are set to the same resolution. So please verify this and if nessesary adjust your display configuration.
@@ -212,6 +226,22 @@ layout = 4
 window1 = device1,channel1
 ...
 ```
+
+## Troubleshooting
+
+### Check logging output
+
+To be sure all instances are stopped:  
+```
+sudo systemctl stop camplayer.service
+```
+
+Run camplayer from command line without 'sudo':  
+```
+camplayer
+```
+
+Check the output of this command for errors and/or warnings.
 
 ## Performance impact
 
@@ -268,9 +298,13 @@ streamquality       Stream selection when multiple subchannels are defined
                     (0=lowest quality, 1=automatic, 2=highest quality).
 refreshtime         Refresh streams interval in minutes.
 enablehevc          HEVC/H265 support (0=disable, 1=auto select from hardware, 2=limit to FHD/1080p, 3=force on).
-enableaudio         Enable audio support for fullscreen playing video. (0=off, 1=on).
+enableaudio         Enable audio support for fullscreen playing video. (0=off, 1=on when fullscreen).
 screendownscale     Downscale the used screen area (adds a black border) in percent.
 enablevideoosd      Show channel/camera name on top of each video (0=off, 1=on).
+audiovolume         Default audio volume (0..100).
+screendownscale     Downscale the virtual screen by x percent (0..100).
+screenwidth         Forced screen with in pixels (if autodetect fails).
+screenheight        Forced screen height in pixels (if autodetect fails).
 ```
 ## Key bindings
 ```
@@ -278,9 +312,10 @@ space               Pause/unpause automatic screen rotation.
 enter               Switch from grid to single view mode.
 left/right arrow    Switch to previous/next screen (or window in single view mode).
 up/down arrow       Increase/decrease stream quality (if multiple subchannels/substreams configured).
-numeric keys 1..9   Switch from grid view mode to the relevant window in fullscreen (single view mode).
+numeric keys 1..16  Switch from grid view mode to the relevant window in fullscreen (single view mode).
 numeric key 0       Switch from single view to grid view mode and unpause rotation.
 escape              Switch from single view to grid view mode and unpause rotation.
+letter 'q'          Quit camplayer.
 ```
 
 ## Roadmap
