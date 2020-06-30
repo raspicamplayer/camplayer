@@ -510,6 +510,7 @@ class Screen(object):
 
         else:
             LOG.ERROR(self._LOG_NAME, "layout configuration '%i' invalid, falling back on 1X1 layout" % self.layout)
+            self.layout = LAYOUT._1X1
             nrows_ncolums = 1
             self.grid_size = [9, 16]
         
@@ -1236,7 +1237,7 @@ class ScreenManager(object):
 
             self._screens[display_num - 1].append(screen)
 
-            BackGroundManager.add_background(window_count=layout, display_idx=display_num-1)
+            BackGroundManager.add_background(window_count=screen.layout, display_idx=display_num-1)
 
         # Add backgrounds and icons based on the parsed screen configuration
         for display_idx in range(GLOBALS.NUM_DISPLAYS):
