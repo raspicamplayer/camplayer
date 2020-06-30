@@ -45,6 +45,7 @@ def main():
 
     num_array = []
     last_added = time.monotonic()
+    ignore_quit = False
 
     if not platform.system() == "Linux":
         sys.exit("'%s' OS not supported!" % platform.system())
@@ -73,6 +74,7 @@ def main():
                 print("             --rebuild-cache         Rebuild cache on startup")
                 print("             --rebuild-cache-exit    Rebuild cache and exit afterwards")
                 print("         -d  --demo                  Demo mode")
+                print("             --ignorequit            Don't quit when the 'Q' key is pressed")
                 sys.exit(0)
 
             # Run in a specific mode
@@ -99,6 +101,10 @@ def main():
             # Run demo mode
             if arg == "-d" or arg == "--demo":
                 CONSTANTS.CONFIG_PATH = CONSTANTS.DEMO_CONFIG_PATH
+
+            # Ignore keyboard 'quit' command
+            if arg == "--ignorequit":
+                ignore_quit = True
 
     # Load settings from config file
     CONFIG.load()
@@ -260,6 +266,9 @@ def main():
                 elif event.code == KEYCODE.KEY_D:
                     screenmanager.on_action(Action.SWITCH_DISPLAY_CONTROL)
 
+                elif event.code == KEYCODE.KEY_Q and not ignore_quit:
+                    running = False
+
                 break
 
         # Timeout between key presses expired?
@@ -294,10 +303,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-
-        
-        
-        
-        
-

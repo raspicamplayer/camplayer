@@ -37,6 +37,7 @@ class KEYCODE(object):
     """Linux keyboard scancodes"""
 
     KEY_D                   = 32
+    KEY_Q                   = 16
     KEY_LEFT                = 105
     KEY_RIGHT               = 106
     KEY_UP                  = 103
