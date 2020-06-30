@@ -280,13 +280,16 @@ def main():
 
             LOG.INFO(_LOG_NAME, "Process numeric key input '%s'" % str(num_array))
 
-            if num_array[-1] == 0:
+            number = 0
+            number += num_array[-2] * 10 if len(num_array) > 1 else 0
+            number += num_array[-1]
+
+            if number == 0:
                 num_array.clear()
                 screenmanager.on_action(Action.SWITCH_GRID)
             else:
-                idx = num_array[-1] - 1
                 num_array.clear()
-                screenmanager.on_action(Action.SWITCH_SINGLE, idx)
+                screenmanager.on_action(Action.SWITCH_SINGLE, number - 1)
 
         time.sleep(0.1)
 
