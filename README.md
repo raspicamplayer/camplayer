@@ -303,7 +303,7 @@ screendownscale     Downscale the used screen area (adds a black border) in perc
 enablevideoosd      Show channel/camera name on top of each video (0=off, 1=on).
 audiovolume         Default audio volume (0..100).
 screendownscale     Downscale the virtual screen by x percent (0..100).
-screenwidth         Forced screen with in pixels (if autodetect fails).
+screenwidth         Forced screen width in pixels (if autodetect fails).
 screenheight        Forced screen height in pixels (if autodetect fails).
 ```
 ## Key bindings
