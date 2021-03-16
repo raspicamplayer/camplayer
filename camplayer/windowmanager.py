@@ -93,6 +93,7 @@ class Window(object):
         self._window_num        = window_idx + 1
         self._screen_num        = screen_idx + 1
         self._display_num       = display_idx + 1
+        self.force_udp          = False
 
         self._omx_dbus_ident = str("org.mpris.MediaPlayer2.omxplayer_D%02d_S%02d_W%02d" %
                                    (self._display_num, self._screen_num, self._window_num))
@@ -800,11 +801,13 @@ class Window(object):
                 '--alpha',          '255',                                  # No transparency
                 '--nodeinterlace',                                          # Assume progressive streams
                 '--nohdmiclocksync',                                        # Clock sync makes no sense with multiple clock sources
-                '--avdict' ,        'rtsp_transport:tcp',                   # Force RTSP over TCP
                 '--display',        '7' if self._display_num == 2 else '2', # 2 is HDMI0 (default), 7 is HDMI1 (pi4)
                 '--timeout',        str(CONFIG.PLAYTIMEOUT_SEC),            # Give up playback after this period of trying
                 '--win',            omx_pos_arg                             # Window position
             ]
+
+            if not self.force_udp:
+                player_cmd.extend(['--avdict', 'rtsp_transport:tcp'])       # Force RTSP over TCP
 
             if stream.url.startswith('file://'):
                 player_cmd.append('--loop')                                 # Loop for local files (demo/test mode)
@@ -845,7 +848,6 @@ class Window(object):
             player_cmd = ['cvlc',
                 '--fullscreen',                                             # VLC does not support windowed mode without X11
                 '--network-caching=' + str(CONFIG.BUFFERTIME_MS),           # Threshold of buffer in miliseconds
-                '--rtsp-tcp',                                               # Force RTSP over TCP
                 '--no-keyboard-events',                                     # No keyboard events
                 '--mmal-display=hdmi-' + str(self._display_num),            # Select the correct display
                 '--mmal-layer=0',                                           # OMXplayer uses layers starting from 0, don't interference
@@ -854,6 +856,9 @@ class Window(object):
                 '--gain=1',                                                 # Audio gain
                 '--no-video-title-show'                                     # Disable filename popup on start
             ]
+
+            if not self.force_udp:
+                player_cmd.append('--rtsp-tcp')                             # Force RTSP over TCP
 
             # Keep in mind that VLC instances can be reused for
             # other windows with possibly other audio settings!
