@@ -593,11 +593,22 @@ class Screen(object):
                                     if window_map[1].split("_")[0] in setting and "url" in setting:
                                         self.windows[idx].add_stream(value)
 
+                            if '_' in window_map[1]:
+                                channel_setting_base = window_map[1].split('_')[0]  # Format: channel1_url
+                            else:
+                                channel_setting_base = window_map[1].split(".")[0]  # Format: channel1.1_url
+
                             # Channel name defined?
-                            channel_name_set = window_map[1].split('.')[0] + "_name"
+                            channel_name_set = channel_setting_base + "_name"
                             if CONFIG.has_setting(window_map[0].upper(), channel_name_set):
                                 self.windows[idx].set_display_name(
                                     CONFIG.read_setting(window_map[0].upper(), channel_name_set))
+
+                            # Force UDP enabled?
+                            force_udp_set = channel_setting_base + "_force_udp"
+                            if CONFIG.has_setting(window_map[0].upper(), force_udp_set):
+                                self.windows[idx].force_udp = CONFIG.read_setting_default_int(
+                                    window_map[0].upper(), force_udp_set, 0)
 
             except Exception as ex:
                 LOG.ERROR(self._LOG_NAME, "configfile parsing error: %s" % str(ex))
