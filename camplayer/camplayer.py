@@ -106,6 +106,11 @@ def main():
             if arg == "--ignorequit":
                 ignore_quit = True
 
+    # Create folder if not exist
+    if not os.path.isdir(os.path.dirname(CONSTANTS.APPDATA_DIR)):
+        print("Creating config folder '%s'" % CONSTANTS.APPDATA_DIR)
+        os.system("mkdir -p %s" % os.path.dirname(CONSTANTS.APPDATA_DIR))
+
     # Load settings from config file
     CONFIG.load()
 
