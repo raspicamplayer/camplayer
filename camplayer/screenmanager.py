@@ -380,6 +380,36 @@ class Screen(object):
             nrows_ncolums = 1
             self.grid_size = [9, 16]
             
+        elif self.layout == LAYOUT._1X3:
+            nrows_ncolums = 3
+            self.grid_size = [1, 3]
+            self.windows.append(Window(
+                x1=CONSTANTS.VIRT_SCREEN_OFFSET_X,
+                y1=CONSTANTS.VIRT_SCREEN_OFFSET_Y,
+                x2=int(CONSTANTS.VIRT_SCREEN_OFFSET_X + CONSTANTS.VIRT_SCREEN_WIDTH),
+                y2=int(CONSTANTS.VIRT_SCREEN_OFFSET_Y + (CONSTANTS.VIRT_SCREEN_HEIGHT / 3)),
+                gridindex=[0],
+                screen_idx=self._screen_idx,
+                window_idx=len(self.windows),
+                display_idx=self._display_idx))
+            self.windows.append(Window(
+                x1=CONSTANTS.VIRT_SCREEN_OFFSET_X,
+                y1=CONSTANTS.VIRT_SCREEN_OFFSET_Y + (CONSTANTS.VIRT_SCREEN_HEIGHT / 3),
+                x2=int(CONSTANTS.VIRT_SCREEN_OFFSET_X + CONSTANTS.VIRT_SCREEN_WIDTH),
+                y2=int(CONSTANTS.VIRT_SCREEN_OFFSET_Y + (CONSTANTS.VIRT_SCREEN_HEIGHT * 2 / 3)),
+                gridindex=[1],
+                screen_idx=self._screen_idx,
+                window_idx=len(self.windows),
+                display_idx=self._display_idx))
+            self.windows.append(Window(
+                x1=CONSTANTS.VIRT_SCREEN_OFFSET_X,
+                y1=CONSTANTS.VIRT_SCREEN_OFFSET_Y + (CONSTANTS.VIRT_SCREEN_HEIGHT * 2 / 3),
+                x2=int(CONSTANTS.VIRT_SCREEN_OFFSET_X + CONSTANTS.VIRT_SCREEN_WIDTH),
+                y2=int(CONSTANTS.VIRT_SCREEN_OFFSET_Y + CONSTANTS.VIRT_SCREEN_HEIGHT),
+                gridindex=[2], 
+                screen_idx=self._screen_idx,
+                window_idx=len(self.windows),
+                display_idx=self._display_idx))
         elif self.layout == LAYOUT._2X2:
             nrows_ncolums = 2
             self.grid_size = [16]
@@ -531,6 +561,7 @@ class Screen(object):
                         (self.layout == LAYOUT._2P8 and column > 1) or
                         (self.layout == LAYOUT._3P4 and (column > 1 and row > 1)) or
                         (self.layout == LAYOUT._1X1) or
+                        (self.layout == LAYOUT._1X3) or
                         (self.layout == LAYOUT._2X2) or
                         (self.layout == LAYOUT._3X3) or
                         (self.layout == LAYOUT._4X4)):

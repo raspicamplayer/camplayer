@@ -34,6 +34,7 @@ class BackGround(object):
 
         _map = ({
             1: cls.NOLINK_1X1,
+            3: cls.NOLINK_1X1,
             4: cls.NOLINK_2X2,
             6: cls.NOLINK_1P5,
             7: cls.NOLINK_3P4,
