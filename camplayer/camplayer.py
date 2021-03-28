@@ -20,7 +20,7 @@ from screenmanager import Action
 running = True
 
 _LOG_NAME = "Main"
-__version__ = "1.0.0b3"
+__version__ = "1.0.0b4"
 
 
 def signal_handler(signum, frame):
