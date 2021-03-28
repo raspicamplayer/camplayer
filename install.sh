@@ -64,6 +64,15 @@ cp -v camplayer.service $SYSTEMD_PATH
 systemctl daemon-reload
 systemctl disable camplayer.service
 
+# ---------------------- pipng -----------------------
+# ----------------------------------------------------
+
+echo "Installing and building pipng"
+git clone https://github.com/raspicamplayer/pipng.git
+cd ./pipng/ && make && make install
+cd ../
+rm -rf pipng
+
 # --------------------- Done! ------------------------
 # ----------------------------------------------------
 
