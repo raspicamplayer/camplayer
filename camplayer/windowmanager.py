@@ -806,7 +806,7 @@ class Window(object):
                 '--win',            omx_pos_arg                             # Window position
             ]
 
-            if not self.force_udp:
+            if not self.force_udp and not stream.force_udp:
                 player_cmd.extend(['--avdict', 'rtsp_transport:tcp'])       # Force RTSP over TCP
 
             if stream.url.startswith('file://'):
@@ -857,7 +857,7 @@ class Window(object):
                 '--no-video-title-show'                                     # Disable filename popup on start
             ]
 
-            if not self.force_udp:
+            if not self.force_udp and not stream.force_udp:
                 player_cmd.append('--rtsp-tcp')                             # Force RTSP over TCP
 
             # Keep in mind that VLC instances can be reused for
