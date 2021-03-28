@@ -28,6 +28,7 @@ class StreamInfo(object):
         self.width                  = 0
         self.framerate              = 0
         self.has_audio              = False
+        self.force_udp              = False
         self._parse_stream_details()
 
         self.valid_url              = self._is_url_valid()
@@ -35,13 +36,13 @@ class StreamInfo(object):
         self.valid_video_fullscreen = self._is_video_valid(windowed=False)
         self.weight                 = self._calculate_weight()
         self.quality                = self.width * self.height
-        
+
         LOG.INFO(self._LOG_NAME, "stream properties '%s', resolution '%ix%i@%i', codec '%s', "
                               "calculated weight '%i', valid url '%i', has audio '%s', "
-                              "valid video 'windowed %i fullscreen %i'" % (
+                              "valid video 'windowed %i fullscreen %i', force UDP '%s'" % (
                                 self.printable_url(), self.width, self.height, self.framerate,
                                 self.codec_name, self.weight, self.valid_url, self.has_audio,
-                                self.valid_video_windowed, self.valid_video_fullscreen))
+                                self.valid_video_windowed, self.valid_video_fullscreen, self.force_udp))
 
     def printable_url(self):
         """Returns streaming url without readable username and password"""
@@ -146,55 +147,63 @@ class StreamInfo(object):
                     self.width          = stream_props.get('width')
                     self.framerate      = stream_props.get('framerate')
                     self.has_audio      = stream_props.get('audio')
+                    self.force_udp      = stream_props.get('force_udp')
                     parsed_ok = True
 
         if not parsed_ok:
-            try:
+            for i in range(2):
 
-                # Invoke ffprobe, 20s timeout required for pi zero
-                streams = subprocess.check_output([
-                        'ffprobe', '-v', 'error', '-show_entries',
-                        'stream=codec_type,height,width,codec_name,bit_rate,max_bit_rate,avg_frame_rate',
-                        self.url], universal_newlines=True, timeout=10, stderr=subprocess.STDOUT).split("[STREAM]")
+                # Most cameras are using TCP, so test for TCP first. If that fails, test with UDP.
+                transport = 'udp' if i > 0 else 'tcp'
 
-                for stream in streams:
-                    streamprops = stream.split()
-                    
-                    if "codec_type=video" in stream and not video_found:
-                        video_found = True
+                try:
+                    # Invoke ffprobe, 20s timeout required for pi zero
+                    streams = subprocess.check_output([
+                            'ffprobe', '-v', 'error', '-rtsp_transport', transport, '-show_entries',
+                            'stream=codec_type,height,width,codec_name,bit_rate,max_bit_rate,avg_frame_rate',
+                            self.url], universal_newlines=True, timeout=10, stderr=subprocess.STDOUT).split("[STREAM]")
 
-                        for streamproperty in streamprops:
-                            if "codec_name" in streamproperty:
-                                self.codec_name = streamproperty.split("=")[1]
-                            if "height" in streamproperty:
-                                self.height = int(streamproperty.split("=")[1])
-                            if "width" in streamproperty:
-                                self.width = int(streamproperty.split("=")[1])
-                            if "avg_frame_rate" in streamproperty:
-                                try:
-                                    framerate = streamproperty.split("=")[1]
-                                
-                                    # ffprobe returns framerate as fraction,
-                                    # a zero division exception is therefore possible
-                                    self.framerate = int(
-                                        framerate.split("/")[0])/int(framerate.split("/")[1])
-                                except Exception:
-                                    self.framerate = 0
+                    for stream in streams:
+                        streamprops = stream.split()
 
-                    elif "codec_type=audio" in stream and not self.has_audio:
-                        self.has_audio = True
+                        if "codec_type=video" in stream and not video_found:
+                            video_found = True
 
-                if video_found:
-                    try:
-                        self._write_stream_details()
+                            for streamproperty in streamprops:
+                                if "codec_name" in streamproperty:
+                                    self.codec_name = streamproperty.split("=")[1]
+                                if "height" in streamproperty:
+                                    self.height = int(streamproperty.split("=")[1])
+                                if "width" in streamproperty:
+                                    self.width = int(streamproperty.split("=")[1])
+                                if "avg_frame_rate" in streamproperty:
+                                    try:
+                                        framerate = streamproperty.split("=")[1]
 
-                    # TODO: filter read-only exception
-                    except Exception:
-                        LOG.ERROR(self._LOG_NAME, "writing ffprobe results to file failed, read only?")
+                                        # ffprobe returns framerate as fraction,
+                                        # a zero division exception is therefore possible
+                                        self.framerate = int(
+                                            framerate.split("/")[0])/int(framerate.split("/")[1])
+                                    except Exception:
+                                        self.framerate = 0
 
-            # TODO: logging exceptions can spawn credentials??
-            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
-                LOG.ERROR(self._LOG_NAME, "ffprobe exception: %s" % str(ex))
+                        elif "codec_type=audio" in stream and not self.has_audio:
+                            self.has_audio = True
+
+                    if video_found:
+                        try:
+                            self.force_udp = True if transport == 'udp' else False
+                            self._write_stream_details()
+                            break
+
+                        # TODO: filter read-only exception
+                        except Exception:
+                            LOG.ERROR(self._LOG_NAME, "writing ffprobe results to file failed, read only?")
+
+                # TODO: logging exceptions can spawn credentials??
+                except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as ex:
+                    if i > 0:
+                        LOG.ERROR(self._LOG_NAME, "ffprobe exception: %s" % str(ex))
 
     def _write_stream_details(self):
         """Write stream details to cache file"""
@@ -208,6 +217,7 @@ class StreamInfo(object):
             'width'         : self.width,
             'framerate'     : self.framerate,
             'audio'         : self.has_audio,
+            'force_udp'     : self.force_udp,
         }}
 
         # Read stream details file and append our new data
