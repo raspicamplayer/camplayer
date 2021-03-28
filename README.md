@@ -6,7 +6,10 @@ Especially the RTSP protocol is supported by nearly all big brands out there.
  A picture is worth a thousand words.  
 
  ![Camplayer 2x2 grid](./screenshots/camplayer_nolink.png)
- 
+
+## Website
+[https://www.rpi-camplayer.com/](https://www.rpi-camplayer.com/)
+
 ## Donate
 Please consider a donation if you like this software or want to support its ongoing development.
 
@@ -120,7 +123,7 @@ sudo apt-get install git
 
 Get the source code and check it out in the current directory:  
 ```
-git clone https://github.com/raspicamplayer/camplayer.git
+git clone -b Camplayer_1.0 https://github.com/raspicamplayer/camplayer.git
 ```
 
 Install camplayer by running the install script:  
@@ -149,20 +152,6 @@ sudo systemctl stop camplayer.service
 ```
 or  
 Press "q" key.
-  
-### Video backgrounds
-
-Optionally, camplayer can display 'NO LINK' video backgrounds by using pipng.
-
-Get the source code and check it out in the current directory:  
-```
-sudo git clone https://github.com/raspicamplayer/pipng.git
-```
-
-Build and install:  
-```
-cd ./pipng/ && sudo make && sudo make install
-```
 
 ## Experimental HEVC/H265 support
 You have to install an experimental VLC media player version,  
@@ -241,7 +230,11 @@ Run camplayer from command line without 'sudo':
 camplayer
 ```
 
-Check the output of this command for errors and/or warnings.
+Check the output of this command for errors and/or warnings.  
+  
+* For the Raspberry pi 4, use the HDMI0 labeled output
+* Unsupported hardware? -> see 'hardwarecheck' in advanced settings, no guarantee!
+* H265/HEVC streams are not supported in grid mode!  
 
 ## Performance impact
 
