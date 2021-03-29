@@ -157,11 +157,16 @@ class StreamInfo(object):
                 transport = 'udp' if i > 0 else 'tcp'
 
                 try:
+                    ffprobe_args = ['ffprobe', '-v', 'error', '-show_entries',
+                                    'stream=codec_type,height,width,codec_name,bit_rate,max_bit_rate,avg_frame_rate',
+                                    self.url]
+
+                    if self.url.startswith('rtsp://'):
+                        ffprobe_args.extend(['-rtsp_transport', transport])
+
                     # Invoke ffprobe, 20s timeout required for pi zero
-                    streams = subprocess.check_output([
-                            'ffprobe', '-v', 'error', '-rtsp_transport', transport, '-show_entries',
-                            'stream=codec_type,height,width,codec_name,bit_rate,max_bit_rate,avg_frame_rate',
-                            self.url], universal_newlines=True, timeout=10, stderr=subprocess.STDOUT).split("[STREAM]")
+                    streams = subprocess.check_output(ffprobe_args, universal_newlines=True, timeout=10,
+                                                      stderr=subprocess.STDOUT).split("[STREAM]")
 
                     for stream in streams:
                         streamprops = stream.split()
