@@ -15,6 +15,7 @@ pi_revisions = {
     "a01041" : {"model": "2B",       "supported": True, "dual_hdmi": False, "hevc": False},
     "a21041" : {"model": "2B",       "supported": True, "dual_hdmi": False, "hevc": False},
     "a22042" : {"model": "2B",       "supported": True, "dual_hdmi": False, "hevc": False},
+    "9020e0" : {"model": "3A+",      "supported": True, "dual_hdmi": False, "hevc": False},
     "a02082" : {"model": "3B",       "supported": True, "dual_hdmi": False, "hevc": False},
     "a32082" : {"model": "3B",       "supported": True, "dual_hdmi": False, "hevc": False},
     "a22082" : {"model": "3B",       "supported": True, "dual_hdmi": False, "hevc": False},
