@@ -148,7 +148,7 @@ def get_display_mode(display=2):
             ['tvservice', '--device', str(display), '--status'],
             stderr=subprocess.STDOUT).decode().splitlines()[0]
 
-        tmp = re.search('^state.+HDMI.(\S+).*\((\d+)\)[\s*\S*]* (\d+)x(\d+).+@ (\d+)', response)
+        tmp = re.search('^state.+(DMT|CEA).*\((\d+)\)[\s*\S*]* (\d+)x(\d+).+@ (\d+)', response)
         if tmp:
             hdmi_group  = tmp.group(1)
             hdmi_mode   = int(tmp.group(2))
