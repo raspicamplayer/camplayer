@@ -43,6 +43,7 @@ class StreamInfo(object):
                                 self.printable_url(), self.width, self.height, self.framerate,
                                 self.codec_name, self.weight, self.valid_url, self.has_audio,
                                 self.valid_video_windowed, self.valid_video_fullscreen, self.force_udp))
+        LOG.INFO(self._LOG_NAME, "RUN 'camplayer --rebuild-cache' IF THIS STREAM INFORMATION IS OUT OF DATE!!")
 
     def printable_url(self):
         """Returns streaming url without readable username and password"""
