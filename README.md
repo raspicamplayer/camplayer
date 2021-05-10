@@ -15,19 +15,6 @@ Please consider a donation if you like this software or want to support its ongo
 
 <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZJMX4ZWEUCP22&source=url" target="_blank" rel="nofollow"><img src="https://www.paypal.com/en_US/i/btn/x-click-but21.gif" alt="" /></a>
 
-Donators who donate €10 or more can get early access to CAMPLAYER OS.  
-CAMPLAYER OS is a linux based OS packed with camplayer and additional features like:  
-
-* Plug and play system.
-* GUI for system and camplayer configuration (no more messing with config files).
-* CEC remote control support.
-* Support for dynamic IP addresses.
-* Read-only mode to prevent SD card corruption.  
-* ...
-
-You can find more information about CAMPLAYER OS here:
-https://github.com/raspicamplayer/camplayer_os
-
 ## Features
 * MPEG2, H264, MJPEG and experimental HEVC support (see support matrix).
 * Video grid for up to 16 streams.
@@ -103,6 +90,7 @@ I take no responsibility for leaked footage, leaked credentials, hacked cameras 
 ## Installation
 
 The instruction below assume you are running a recent Raspberry Pi OS Lite build.  
+If you are interested in a plug & play system with some additional features, check out [https://www.rpi-camplayer.com/](https://www.rpi-camplayer.com/)
 
 Add the following lines to '/boot/config.txt':  
 ```
