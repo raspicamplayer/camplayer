@@ -311,6 +311,7 @@ normal actions
 - click right       Pause/unpause automatic screen rotation.
 - scroll up/down    Switch between grid to single view mode.
 ```
+-
 ## Roadmap
 ### Camplayer 2
 * Improve VLC and drop OMXplayer support, drop code hacks introduced to support them both.
