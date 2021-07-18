@@ -18,6 +18,11 @@ class InputMonitor(object):
         self._event_hold = True if 'hold' in event_type else False
         self._running = True
         self._monitor_thread = threading.Thread(target=self._monitor, daemon=True).start()
+        self._mouse_inhibit = time.monotonic()
+        self._mouse_inhibit_duration = 0.5
+        self._mouse_btn_state = 0
+        self._mouse_abs_x = 500
+        self._mouse_abs_y = 500
         
     def destroy(self):
         """Stop monitoring thread"""
@@ -62,13 +67,83 @@ class InputMonitor(object):
                     while True:
                         event = device.read_one()
                         if event:
+                            
+                            # keyboard and button events
                             if event.type == evdev.ecodes.EV_KEY:
-                                if self._event_up and event.value == 0:
+
+                                # mouse buttons
+                                if ( event.code in {evdev.ecodes.BTN_MOUSE,
+                                                    evdev.ecodes.BTN_RIGHT,
+                                                    evdev.ecodes.BTN_MIDDLE} ):
+                                    # Left click: track (left) mouse button state
+                                    # note that left mouse click by itself does not do anything
+                                    if event.code == evdev.ecodes.BTN_MOUSE:
+                                        self._mouse_btn_state = event.value
+                                    # Right click, while left is already down, Quit program
+                                    elif (      event.code == evdev.ecodes.BTN_RIGHT 
+                                            and self._mouse_btn_state == 1
+                                            and event.value == 0 ): 
+                                        event.code = evdev.ecodes.KEY_Q
+                                        self._event_queue.put_nowait(event)
+                                    # Right click, while left is not already down, Pause autorotate
+                                    elif (      event.code == evdev.ecodes.BTN_RIGHT
+                                            and event.value == 0 ):
+                                        event.code = evdev.ecodes.KEY_SPACE
+                                        self._event_queue.put_nowait(event)
+
+                                # other keys / keyboard keys
+                                elif self._event_up and event.value == 0:
                                     self._event_queue.put_nowait(event)
                                 elif self._event_down and event.value == 1:
                                     self._event_queue.put_nowait(event)
                                 elif self._event_hold and event.value == 2:
                                     self._event_queue.put_nowait(event)
+
+                            # mouse movement events
+                            elif event.type == evdev.ecodes.EV_REL:
+
+                                # unused for now, track absolute position
+                                if event.code == evdev.ecodes.REL_X:
+                                    self._mouse_abs_x += event.value;
+                                    self._mouse_abs_x = min(1920, self._mouse_abs_x)
+                                    self._mouse_abs_x = max(1, self._mouse_abs_x)
+                                elif event.code == evdev.ecodes.REL_Y:
+                                    self._mouse_abs_y += event.value;
+                                    self._mouse_abs_y = min(1080, self._mouse_abs_y)
+                                    self._mouse_abs_y = max(1, self._mouse_abs_y)
+
+                                # Gestures, only one per timeslot.
+                                if (time.monotonic() > self._mouse_inhibit + self._mouse_inhibit_duration):
+                                    # wheel up/down is zoom in/out, iow, single/grid view
+                                    if   (      event.code == evdev.ecodes.REL_WHEEL
+                                            and abs(event.value) > 0 ):
+                                        if event.value > 0: 
+                                            event.code = evdev.ecodes.KEY_0
+                                        else:
+                                            event.code = evdev.ecodes.KEY_1
+                                        self._mouse_inhibit = time.monotonic()
+                                        self._event_queue.put_nowait(event)
+                                    # move left/right while button down is prev/next screen
+                                    elif (      event.code == evdev.ecodes.REL_X
+                                            and self._mouse_btn_state == 1
+                                            and abs(event.value) > 10 ):
+                                        if event.value > 0:
+                                            event.code = evdev.ecodes.KEY_RIGHT
+                                        else:
+                                            event.code = evdev.ecodes.KEY_LEFT
+                                        self._mouse_inhibit = time.monotonic()
+                                        self._event_queue.put_nowait(event)
+                                    # move up/down while button down is higher/lower quality
+                                    elif (      event.code == evdev.ecodes.REL_Y
+                                            and self._mouse_btn_state == 1
+                                            and abs(event.value) > 10 ):
+                                        if event.value > 0:
+                                            event.code = evdev.ecodes.KEY_DOWN
+                                        else:
+                                            event.code = evdev.ecodes.KEY_UP
+                                        self._mouse_inhibit = time.monotonic()
+                                        self._event_queue.put_nowait(event)
+                            
                             del event
                         else:
                             break
