@@ -298,7 +298,19 @@ numeric key 0       Switch from single view to grid view mode and unpause rotati
 escape              Switch from single view to grid view mode and unpause rotation.
 letter 'q'          Quit camplayer.
 ```
-
+## Mouse gestures
+Please note there is no visible mouse, nor any absolute positioning. So you cannot jump directly to
+the single view for a specific camera. Scroll wheel will zoom to first camera, and then gesture 
+left/right a few times
+```
+while holding left button down
+- move left/right   Switch to previous/next screen (or window in single view mode).
+- move up/down      Increase/decrease stream quality (if multiple subchannels/substreams configured).
+- click right       Quit camplayer.
+normal actions
+- click right       Pause/unpause automatic screen rotation.
+- scroll up/down    Switch between grid to single view mode.
+```
 ## Roadmap
 ### Camplayer 2
 * Improve VLC and drop OMXplayer support, drop code hacks introduced to support them both.
