@@ -174,6 +174,25 @@ def get_display_mode(display=2):
     except:
         pass
 
+    try:
+        # correct/get resolution from framebuffer in case of 90 degree rotated screens
+        # In fact I wonder if we even need above tvservice call as fbset also works
+        # when HDMI is disconnected or blanked, and it works if only HDMI1 is connected
+        # without having to configure such in config.ini
+        # TODO nicer way to link hardware device and framebuffer
+        framebuffer = '/dev/fb0'
+        if display == 7:
+            framebuffer = '/dev/fb1'
+        response = subprocess.check_output(
+            ['fbset', '-fb', framebuffer, '--show'],
+            stderr=subprocess.STDOUT).decode()
+        tmp = re.search('geometry\s(\d+)\s(\d+)', response)
+        if tmp:
+            res_width   = int(tmp.group(1))
+            res_height  = int(tmp.group(2))
+    except:
+        pass
+
     return {'hdmi_group': hdmi_group, 'hdmi_mode': hdmi_mode, 'res_width': res_width,
             'res_height': res_height, 'framerate': framerate, 'device_name': device_name}
 
