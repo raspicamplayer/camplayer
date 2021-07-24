@@ -157,13 +157,6 @@ def get_display_mode(display=2):
             res_width   = int(tmp.group(3))
             res_height  = int(tmp.group(4))
             framerate   = int(tmp.group(5))
-        else:
-            tmp = re.search('^state.+(CUSTOM).*[\s*\S*]* (\d+)x(\d+).+@ (\d+)', response)
-            if tmp:
-                hdmi_group  = tmp.group(1)
-                res_width   = int(tmp.group(2))
-                res_height  = int(tmp.group(3))
-                framerate   = int(tmp.group(4))
 
         response = subprocess.check_output(
             ['tvservice', '--device', str(display), '--name'],
