@@ -59,10 +59,10 @@ fi
 # ---------------- Systemd service -------------------
 # ----------------------------------------------------
 
-echo "Installing 'camplayer' as a systemd service"
-cp -v camplayer.service $SYSTEMD_PATH
-systemctl daemon-reload
-systemctl disable camplayer.service
+#echo "Installing 'camplayer' as a systemd service"
+#cp -v camplayer.service $SYSTEMD_PATH
+#systemctl daemon-reload
+#systemctl disable camplayer.service
 
 # ---------------------- pipng -----------------------
 # ----------------------------------------------------
