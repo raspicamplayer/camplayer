@@ -20,7 +20,7 @@ from screenmanager import Action
 running = True
 
 _LOG_NAME = "Main"
-__version__ = "1.0.0b5"
+__version__ = "1.0.0.dev"
 
 
 def signal_handler(signum, frame):
@@ -50,8 +50,8 @@ def main():
     if not platform.system() == "Linux":
         sys.exit("'%s' OS not supported!" % platform.system())
 
-    if os.geteuid() == 0:
-        sys.exit("Camplayer is not supposed to be run as root!")
+    #if os.geteuid() == 0:
+    #    sys.exit("Camplayer is not supposed to be run as root!")
 
     GLOBALS.PYTHON_VER = sys.version_info
     if GLOBALS.PYTHON_VER < CONSTANTS.PYTHON_VER_MIN:
@@ -137,7 +137,7 @@ def main():
 
     # Get system info
     sys_info = utils.get_system_info()
-    gpu_mem = utils.get_gpu_memory()
+    gpu_mem = 256
     hw_info = utils.get_hardware_info()
 
     # Set some globals for later use
