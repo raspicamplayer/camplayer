@@ -31,6 +31,7 @@ pi_revisions = {
     "c03114" : {"model": "4B 4GB",      "supported": True, "dual_hdmi": True,  "hevc": True},
     "c03130" : {"model": "PI 400 4GB",  "supported": True, "dual_hdmi": True,  "hevc": True},
     "9020e0" : {"model": "3A+",         "supported": True, "dual_hdmi": False, "hevc": False},
+    "b03115" : {"model": "4B 2GB",      "supported": True, "dual_hdmi": True,  "hevc": True},
 }
 
 
