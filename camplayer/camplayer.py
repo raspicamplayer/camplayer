@@ -174,8 +174,8 @@ def main():
 
     # Does this system fulfill the minimal requirements
     if CONFIG.HARDWARE_CHECK:
-        if not hw_info.get("supported"):
-            sys.exit("Unsupported hardware with revision %s ..." % hw_info.get("revision"))
+#         if not hw_info.get("supported"):
+#             sys.exit("Unsupported hardware with revision %s ..." % hw_info.get("revision"))
 
         if gpu_mem < CONSTANTS.MIN_GPU_MEM:
             sys.exit("GPU memory of '%i' MB insufficient ..." % gpu_mem)
